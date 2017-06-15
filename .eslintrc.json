@@ -8,6 +8,10 @@
     "parserOptions": {
         "sourceType": "module"
     },
+    "globals": {
+      "Shop": false,
+      "Item": false
+    },
     "rules": {
         "indent": [
             "error",
