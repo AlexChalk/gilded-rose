@@ -19,6 +19,12 @@ describe('Gilded Rose', function() {
       gildedRose.updateQuality();
       expect(item.quality).toEqual(8);
     });
+    it('the quality of an item is never negative', function() {
+      const item = new Item('chocolate', 1, 0);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(0);
+    });
   });
 
   describe('aged brie', function() {
@@ -29,7 +35,7 @@ describe('Gilded Rose', function() {
       expect(item.quality).toEqual(11);
     });
     it('improves by 2 when sellIn begins day as <= 0', function() {
-      const item = new Item('Aged Brie', 1, 10);
+      const item = new Item('Aged Brie', 0, 10);
       const gildedRose = new Shop([ item ]);
       gildedRose.updateQuality();
       expect(item.quality).toEqual(12);
