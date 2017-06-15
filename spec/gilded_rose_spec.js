@@ -43,6 +43,12 @@ describe('Gilded Rose', function() {
       gildedRose.updateQuality();
       expect(item.quality).toEqual(12);
     });
+    it('quality never exceeds 50', function() {
+      const item = new Item('Aged Brie', 15, 50);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(50);
+    });
   });
   describe('Sulfuras, Hand of Ragnaros', function() {
     it('sellIn is unchanged by updateQuality', function() {
@@ -64,6 +70,12 @@ describe('Gilded Rose', function() {
       const gildedRose = new Shop([ item ]);
       gildedRose.updateQuality();
       expect(item.quality).toEqual(11);
+    });
+    it('quality never exceeds 50', function() {
+      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 15, 50);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(50);
     });
     it('quality increases by 2 when sellin === 6-10', function() {
       const item = new Item('Backstage passes to a TAFKAL80ETC concert', 6, 10);
