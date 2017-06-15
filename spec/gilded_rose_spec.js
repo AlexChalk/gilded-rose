@@ -17,4 +17,19 @@ describe('Gilded Rose', function() {
       expect(items[0].quality).toEqual(8);
     });
   });
+
+  describe('aged brie', function() {
+    it('improves by 1 while sellIn begins day as > 0', function() {
+      const gildedRose = new Shop([ new Item('Aged Brie', 1, 10) ]);
+      const items = gildedRose.updateQuality();
+      console.log(items[0].sellIn);
+      expect(items[0].quality).toEqual(11);
+    });
+    it('improves by 2 when sellIn begins day as <= 0', function() {
+      const gildedRose = new Shop([ new Item('Aged Brie', 0, 10) ]);
+      const items = gildedRose.updateQuality();
+      expect(items[0].quality).toEqual(12);
+    });
+  });
+
 });
