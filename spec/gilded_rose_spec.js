@@ -25,7 +25,7 @@ describe('Gilded Rose', function() {
       gildedRose.updateQuality();
       expect(item.quality).toEqual(0);
     });
-    xit('the quality of an item is never more than 50', function() {
+    it('the quality of an item is never more than 50', function() {
       expect(function(){ new Item('chocolate', 1, 60); }).toThrow(/quality of an item cannot exceed 50/);
     });
   });
@@ -84,4 +84,19 @@ describe('Gilded Rose', function() {
       expect(item.quality).toEqual(0);
     });
   });
+  describe('Conjured items', function() {
+    it('degrades by 2 while sellIn begins day as > 0', function() {
+      const item = new Item('Conjured Chocolate', 1, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(8);
+    });
+    it('degrades by 4 when sellIn begins day as <= 0', function() {
+      const item = new Item('Conjured Chocolate', 0, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(6);
+    });
+  });
+
 });
