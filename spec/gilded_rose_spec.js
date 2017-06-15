@@ -58,5 +58,30 @@ describe('Gilded Rose', function() {
       expect(item.quality).toEqual(10);
     });
   });
-
+  describe('Backstage passes to a TAFKAL80ETC concert', function() {
+    it('quality increases by 1 when sellin >10', function() {
+      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 15, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(11);
+    });
+    it('quality increases by 2 when sellin === 6-10', function() {
+      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 6, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(12);
+    });
+    it('quality increases by 3 when sellin === 0-5', function() {
+      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 1, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(13);
+    });
+    it('quality drops to 0 sellin < 0', function() {
+      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 0, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(0);
+    });
+  });
 });
