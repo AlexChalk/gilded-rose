@@ -25,9 +25,6 @@ describe('Gilded Rose', function() {
       gildedRose.updateQuality();
       expect(item.quality).toEqual(0);
     });
-    it('the quality of an item is never more than 50', function() {
-      expect(function(){ new Item('chocolate', 1, 60); }).toThrow(/quality of an item cannot exceed 50/);
-    });
   });
 
   describe('aged brie', function() {
