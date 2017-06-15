@@ -25,6 +25,9 @@ describe('Gilded Rose', function() {
       gildedRose.updateQuality();
       expect(item.quality).toEqual(0);
     });
+    xit('the quality of an item is never more than 50', function() {
+      expect(function(){ new Item('chocolate', 1, 60); }).toThrow(/quality of an item cannot exceed 50/);
+    });
   });
 
   describe('aged brie', function() {
@@ -39,6 +42,20 @@ describe('Gilded Rose', function() {
       const gildedRose = new Shop([ item ]);
       gildedRose.updateQuality();
       expect(item.quality).toEqual(12);
+    });
+  });
+  describe('Sulfuras, Hand of Ragnaros', function() {
+    it('sellIn is unchanged by updateQuality', function() {
+      const item = new Item('Sulfuras, Hand of Ragnaros', 10, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.sellIn).toEqual(10);
+    });
+    it('quality is unchanged by updateQuality', function() {
+      const item = new Item('Sulfuras, Hand of Ragnaros', 10, 10);
+      const gildedRose = new Shop([ item ]);
+      gildedRose.updateQuality();
+      expect(item.quality).toEqual(10);
     });
   });
 
