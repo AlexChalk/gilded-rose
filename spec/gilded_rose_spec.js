@@ -69,7 +69,7 @@ describe('Gilded Rose', function() {
       expect(item.quality).toEqual(11);
     });
     it('quality never exceeds 50', function() {
-      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 15, 50);
+      const item = new Item('Backstage passes to a TAFKAL80ETC concert', 11, 50);
       const gildedRose = new Shop([ item ]);
       gildedRose.updateQuality();
       expect(item.quality).toEqual(50);
