@@ -17,7 +17,7 @@ describe('Gilded Rose', function() {
     backstagePasses0_10 = new Item('Backstage passes to a TAFKAL80ETC concert', 0, 10);
     conjuredChocolate1_10 = new Item('Conjured Chocolate', 1, 10);
     conjuredChocolate0_10 = new Item('Conjured Chocolate', 0, 10);
-    gildedRose = shop([ chocolate1_10, chocolate0_10, chocolate1_0, agedBrie1_10, agedBrie0_10, agedBrie15_50, sulfuras10_10, backstagePasses11_10, backstagePasses11_50, backstagePasses6_10, backstagePasses1_10, backstagePasses0_10, conjuredChocolate1_10, conjuredChocolate0_10 ]);
+    gildedRose = new Shop([ chocolate1_10, chocolate0_10, chocolate1_0, agedBrie1_10, agedBrie0_10, agedBrie15_50, sulfuras10_10, backstagePasses11_10, backstagePasses11_50, backstagePasses6_10, backstagePasses1_10, backstagePasses0_10, conjuredChocolate1_10, conjuredChocolate0_10 ]);
     gildedRose.updateQuality();
   });
 
