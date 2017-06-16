@@ -76,72 +76,68 @@ var rules = {
 
 };
 
-var defaultBehaviour = {
-  condition: function(item) {
-    return Object.keys(rules).every(function(key) {
-      return rules[key]['condition'](item) === false;
-    });
-  },
-  preSellByAction: function(item) {
-    item.quality -= 1;
-  },
-  postSellByAction: function(item) {
-    item.quality -= 2;
-  },
-};
+var shop = function(itemsStocked) {
+  var items = itemsStocked;
+  var ruleData = rules;
+  var ruleNames = Object.keys(ruleData);
+  var universalRuleData = universalRules;
+  var universalRuleNames = Object.keys(universalRuleData);
+  var defaultBehaviour = {
+    condition: function(item) {
+      return ruleNames.every(function(key) {
+        return ruleData[key]['condition'](item) === false;
+      });
+    },
+    preSellByAction: function(item) {
+      item.quality -= 1;
+    },
+    postSellByAction: function(item) {
+      item.quality -= 2;
+    },
+  };
 
-class Shop {
-  constructor(items=[]){
-    this.items = items;
-    this.rules = rules;
-    this.defaultBehaviour = defaultBehaviour;
-    this.universalRules = universalRules;
-  }
-
-  adjustSellIn(item) {
-    if (item.name.includes('Sulfuras') === false) {
-      item.sellIn -= 1;
-    }
-  }
-
-  applyItemSpecificRules(item) {
-    var that = this;
-    Object.keys(this.rules).forEach(function(rule) {
-      if (that.rules[rule]['condition'](item)) {
+  return {
+    applyItemSpecificRules: function(item) {
+      ruleNames.forEach(function(rule) {
+        if (ruleData[rule]['condition'](item)) {
+          if (item.sellIn < 0) {
+            ruleData[rule]['postSellByAction'](item);
+          } else {
+            ruleData[rule]['preSellByAction'](item);
+          }
+        }
+      });
+    },
+    applyDefaultsToRest: function(item) {
+      if (defaultBehaviour['condition'](item)) {
         if (item.sellIn < 0) {
-          that.rules[rule]['postSellByAction'](item);
+          defaultBehaviour['postSellByAction'](item);
         } else {
-          that.rules[rule]['preSellByAction'](item);
+          defaultBehaviour['preSellByAction'](item);
         }
       }
-    });
-  }
-
-  applyDefaultsToRest(item) {
-    if (this.defaultBehaviour['condition'](item)) {
-      if (item.sellIn < 0) {
-        this.defaultBehaviour['postSellByAction'](item);
-      } else {
-        this.defaultBehaviour['preSellByAction'](item);
+    },
+    adjustSellIn: function(item) {
+      if (item.name.includes('Sulfuras') === false) {
+        item.sellIn -= 1;
       }
+    },
+
+    applyUniversalRules: function(item) {
+      universalRuleNames.forEach(function(uR) {
+        universalRuleData[uR](item);
+      });
+    },
+
+    updateQuality: function() {
+      var that = this;
+      items.forEach(function(item) {
+        that.adjustSellIn(item);
+        that.applyItemSpecificRules(item);
+        that.applyDefaultsToRest(item);
+        that.applyUniversalRules(item);
+      });
+      return this.items;
     }
-  }
-
-  applyUniversalRules(item) {
-    var that = this;
-    Object.keys(this.universalRules).forEach(function(uR) {
-      that.universalRules[uR](item);
-    });
-  }
-
-  updateQuality() {
-    var that = this;
-    this.items.forEach(function(item) {
-      that.adjustSellIn(item);
-      that.applyItemSpecificRules(item);
-      that.applyDefaultsToRest(item);
-      that.applyUniversalRules(item);
-    });
-    return this.items;
-  }
-}
+  };
+};
