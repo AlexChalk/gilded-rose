@@ -93,10 +93,9 @@ var defaultBehaviour = {
 class Shop {
   constructor(items=[]){
     this.items = items;
-    this.defaultBehaviour = defaultBehaviour;
     this.rules = rules;
-    this.universalRules = universalRules;
     this.defaultBehaviour = defaultBehaviour;
+    this.universalRules = universalRules;
   }
 
   adjustSellIn(item) {
