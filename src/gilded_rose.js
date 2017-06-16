@@ -6,12 +6,6 @@ class Item {
   }
 }
 
-var adjustSellIn = function(item) {
-  if (item.name.includes('Sulfuras') === false) {
-    item.sellIn -= 1;
-  }
-};
-
 var universalRules = {
   fiftyMaxQuality: function(item) {
     if (item.quality > 50) {
@@ -78,42 +72,76 @@ var rules = {
     postSellByAction: function(item) {
       item.quality = 0;
     },
-  },
-
-  default: {
-    condition: function(item) {
-      return Object.keys(rules).slice(0,-1).every(function(key) {
-        return rules[key]['condition'](item) === false;
-      });
-    },
-    preSellByAction: function(item) {
-      item.quality -= 1;
-    },
-    postSellByAction: function(item) {
-      item.quality -= 2;
-    },
   }
+
+};
+
+var defaultBehaviour = {
+  condition: function(item) {
+    return Object.keys(rules).every(function(key) {
+      return rules[key]['condition'](item) === false;
+    });
+  },
+  preSellByAction: function(item) {
+    item.quality -= 1;
+  },
+  postSellByAction: function(item) {
+    item.quality -= 2;
+  },
 };
 
 class Shop {
   constructor(items=[]){
     this.items = items;
+    this.defaultBehaviour = defaultBehaviour;
+    this.rules = rules;
+    this.universalRules = universalRules;
+    this.defaultBehaviour = defaultBehaviour;
   }
-  updateQuality() {
-    this.items.forEach(function(item) {
-      adjustSellIn(item);
-      Object.keys(rules).forEach(function(rule) {
-        if (rules[rule]['condition'](item)) {
-          if (item.sellIn < 0) {
-            rules[rule]['postSellByAction'](item);
-          } else {
-            rules[rule]['preSellByAction'](item);
-          }
+
+  adjustSellIn(item) {
+    if (item.name.includes('Sulfuras') === false) {
+      item.sellIn -= 1;
+    }
+  }
+
+  applyItemSpecificRules(item) {
+    var that = this;
+    Object.keys(this.rules).forEach(function(rule) {
+      if (that.rules[rule]['condition'](item)) {
+        if (item.sellIn < 0) {
+          that.rules[rule]['postSellByAction'](item);
+        } else {
+          that.rules[rule]['preSellByAction'](item);
         }
-      });
-      Object.keys(universalRules).forEach(function(uR) {
-        universalRules[uR](item);
-      });
+      }
+    });
+  }
+
+  applyDefaultsToRest(item) {
+    if (this.defaultBehaviour['condition'](item)) {
+      if (item.sellIn < 0) {
+        this.defaultBehaviour['postSellByAction'](item);
+      } else {
+        this.defaultBehaviour['preSellByAction'](item);
+      }
+    }
+  }
+
+  applyUniversalRules(item) {
+    var that = this;
+    Object.keys(this.universalRules).forEach(function(uR) {
+      that.universalRules[uR](item);
+    });
+  }
+
+  updateQuality() {
+    var that = this;
+    this.items.forEach(function(item) {
+      that.adjustSellIn(item);
+      that.applyItemSpecificRules(item);
+      that.applyDefaultsToRest(item);
+      that.applyUniversalRules(item);
     });
     return this.items;
   }
